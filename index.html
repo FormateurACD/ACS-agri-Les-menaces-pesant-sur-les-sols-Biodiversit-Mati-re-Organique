@@ -2898,16 +2898,16 @@
         // Télécharge une copie HTML autonome de l'intégralité de l'application.
         // Le fichier conserve les quatre étapes, les dossiers, les ateliers et les fonctionnalités interactives.
         function downloadFullCoursePDF() {
-            // Le navigateur génère le PDF via son moteur d'impression natif.
-            // Toutes les étapes et les panneaux documentaires sont rendus avant l'export.
+            // Sur iPad, window.print() doit être appelé directement depuis le geste
+            // de l'utilisateur. Un requestAnimationFrame peut faire perdre cette
+            // activation et empêcher l'ouverture de la feuille d'impression.
             document.body.classList.add('full-course-pdf');
             const restore = () => {
                 document.body.classList.remove('full-course-pdf');
                 window.removeEventListener('afterprint', restore);
             };
             window.addEventListener('afterprint', restore);
-            // Laisse le temps au navigateur d'appliquer les styles d'impression.
-            requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+            window.print();
         }
 
         function prepareAndPrint() {
